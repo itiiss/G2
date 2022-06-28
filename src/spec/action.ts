@@ -50,12 +50,20 @@ export type PlotAction = {
 
 export type TooltipAction = {
   type?: 'tooltip';
+  hide?: boolean;
+  // Options of tooltip interaction.
+  shared?: boolean;
+  showCrosshairs?: boolean;
+  crosshairs?: { type?: 'x' | 'y' | 'xy' };
+  showMarkers?: boolean;
+  marker?: any;
 };
 
 export type ElementSelectionAction = {
   type?: 'elementSelection';
   from?: string;
   filterBy?: 'x' | 'color';
+  trigger?: 'axis';
 };
 
 export type TriggerInfoSelectionAction = {

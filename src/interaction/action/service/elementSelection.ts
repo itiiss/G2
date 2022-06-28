@@ -1,3 +1,4 @@
+import { bisectLeft } from 'd3-array';
 import { G2Element, select } from '../../../utils/selection';
 import { ActionComponent as AC } from '../../types';
 import { ElementSelectionAction } from '../../../spec';
@@ -19,16 +20,16 @@ function getElementsByTriggerInfo(
 }
 
 export const ElementSelection: AC<ElementSelectionOptions> = (options) => {
-  const { from, filterBy } = options;
+  const { from, filterBy, trigger } = options;
 
   return (context) => {
-    const { event, shared, selection, scale: scales } = context;
+    const { event, shared, selection, scale: scales, coordinate } = context;
 
     shared.selectedElements = [];
+    const elements = selection.selectAll('.element').nodes();
 
     if (from === 'triggerInfo') {
       const { triggerInfo = [] } = shared;
-      const elements = selection.selectAll('.element').nodes();
       shared.selectedElements = getElementsByTriggerInfo(
         elements,
         scales,
@@ -48,6 +49,13 @@ export const ElementSelection: AC<ElementSelectionOptions> = (options) => {
         } else {
           shared.selectedElements = [target];
         }
+      } else if (trigger === 'axis') {
+        // todo 查找
+        const {
+          __data__: { points },
+        } = elements[0];
+        const xs = points.map((p) => p[0]);
+        const idx = bisectLeft(xs, event.offsetX) - 1;
       }
     }
     return context;

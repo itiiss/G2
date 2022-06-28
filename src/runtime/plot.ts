@@ -607,7 +607,9 @@ function inferTheme(theme: G2ThemeOptions = { type: 'light' }): G2ThemeOptions {
 function inferInteraction(
   interaction: G2InteractionOptions[] = [],
 ): G2InteractionOptions[] {
-  return [...interaction, { type: 'tooltip' }];
+  return !interaction.find(({ type }) => type === 'tooltip')
+    ? [...interaction, { type: 'tooltip' }]
+    : interaction;
 }
 
 async function applyTransform<T extends G2ViewTree>(
